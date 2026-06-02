@@ -40,6 +40,17 @@ def read_post_by_id(post_id):
     return None
 
 
+def update_post(updated_post):
+    """Update an existing blog post with new data and return it."""
+    posts = read_all_posts()
+    for index, post in enumerate(posts):
+        if post["id"] == updated_post["id"]:
+            posts[index] = updated_post
+            write_to_db(posts)
+            return updated_post
+    return None
+
+
 def delete_post(post_id):
     """Remove the blog post with the given ID from the database."""
     posts = read_all_posts()
