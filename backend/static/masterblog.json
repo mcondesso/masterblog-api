@@ -1,0 +1,197 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Masterblog API",
+    "version": "1.0.0",
+    "description": "API documentation for Masterblog backend routes."
+  },
+  "host": "localhost:5002",
+  "basePath": "/",
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "tags": [
+    {
+      "name": "Post",
+      "description": "Post API - CRUD operations and search"
+    }
+  ],
+  "paths": {
+    "/api/posts": {
+      "get": {
+        "tags": ["Post"],
+        "summary": "Returns all posts",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "type": "string",
+            "enum": ["title", "content"],
+            "required": false,
+            "description": "Field to sort by"
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "type": "string",
+            "enum": ["asc", "desc"],
+            "required": false,
+            "description": "Sort direction"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of posts"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Post"],
+        "summary": "Create a new post",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              },
+              "required": ["title", "content"]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Post created successfully"
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/api/posts/{post_id}": {
+      "get": {
+        "tags": ["Post"],
+        "summary": "Get a post by ID",
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post found"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Post"],
+        "summary": "Update a post by ID",
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              },
+              "required": ["title", "content"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post updated successfully"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Post"],
+        "summary": "Delete a post by ID",
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post deleted successfully"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      }
+    },
+    "/api/posts/search": {
+      "get": {
+        "tags": ["Post"],
+        "summary": "Search posts by title or content",
+        "description": "Search for posts using optional title and/or content query parameters.",
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "description": "Text to search for in post titles"
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "description": "Text to search for in post content"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of matching posts"
+          },
+          "400": {
+            "description": "Invalid query parameter"
+          }
+        }
+      }
+    }
+  }
+}

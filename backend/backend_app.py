@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, redirect, request
 from flask_cors import CORS
+from flask_swagger_ui import get_swaggerui_blueprint
 
 from data_layer import (
     delete_post,
@@ -9,14 +10,27 @@ from data_layer import (
     update_post,
 )
 
+
+SWAGGER_URL = "/api/docs"  # (1) swagger endpoint e.g. HTTP://localhost:5002/api/docs
+API_URL = "/static/masterblog.json"  # (2) ensure you create this dir and file
+
+swagger_ui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        "app_name": "Masterblog API"  # (3) You can change this if you like
+    },
+)
+
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
+app.register_blueprint(swagger_ui_blueprint, url_prefix=SWAGGER_URL)
 
 
 # /api/posts Main Endpoint for CRUD operations on blog posts
 @app.route("/api/posts", methods=["GET"])
 def get_posts():
-    
+
     sort_params = {}
     for key in ("sort", "direction"):
         if key in request.args:
@@ -24,9 +38,13 @@ def get_posts():
             if not value:
                 return jsonify({"error": f"'{key}' parameter cannot be empty"}), 400
             if key == "sort" and value not in ("title", "content"):
-                return jsonify({"error": f"Invalid 'sort' parameter value: {value}"}), 400
+                return jsonify(
+                    {"error": f"Invalid 'sort' parameter value: {value}"}
+                ), 400
             if key == "direction" and value not in ("asc", "desc"):
-                return jsonify({"error": f"Invalid 'direction' parameter value: {value}"}), 400
+                return jsonify(
+                    {"error": f"Invalid 'direction' parameter value: {value}"}
+                ), 400
             sort_params[key] = value.lower()
     all_posts = read_all_posts()
 
