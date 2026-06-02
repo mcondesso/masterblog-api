@@ -1,19 +1,19 @@
-POSTS = [
-    {"id": 1, "title": "First post", "content": "This is the first post."},
-    {"id": 2, "title": "Second post", "content": "This is the second post."},
-]
+import json
+
+
+db_path = "backend/db.json"
 
 
 def read_from_db():
     """Read database content from the JSON file and return it."""
-    global POSTS
-    return POSTS
+    with open(db_path, "r", encoding="utf-8") as file_handle:
+        return json.load(file_handle)
 
 
 def write_to_db(data):
     """Write the given data to the JSON file database."""
-    global POSTS
-    POSTS = data
+    with open(db_path, "w", encoding="utf-8") as file_handle:
+        json.dump(data, file_handle, indent=4)
 
 
 def read_all_posts():
@@ -29,7 +29,6 @@ def create_post(post):
     posts.append(post)
     write_to_db(posts)
     return post
-
 
 def read_post_by_id(post_id):
     """Return the blog post matching the given ID, or None if missing."""
