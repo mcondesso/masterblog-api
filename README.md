@@ -1,7 +1,7 @@
-Master Blog API
+# Master Blog API
 A simple Flask blog application for managing posts with JSON database storage and API routes.
 
-Features
+## Features
 - Add blog posts – Create new posts with title and content
 - Update posts – Edit existing posts by ID
 - Delete posts – Remove posts by ID
@@ -9,7 +9,7 @@ Features
 - JSON storage – Store blog posts in a JSON file for lightweight persistence
 - Swagger docs – View API documentation via Swagger UI
 
-Setup
+## Setup
 1. Clone the repository
 2. Create and activate a Python virtual environment
 
@@ -24,7 +24,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Usage
+## Usage
 Run the application:
 
 ```bash
