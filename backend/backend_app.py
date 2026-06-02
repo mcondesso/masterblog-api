@@ -13,6 +13,7 @@ app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
 
 
+# /api/posts Main Endpoint for CRUD operations on blog posts
 @app.route("/api/posts", methods=["GET"])
 def get_posts():
     return jsonify(read_all_posts())
@@ -84,6 +85,28 @@ def delete_post_by_id(post_id):
         {"message": f"Post with id {post_id} has been deleted successfully."}
     )
     return response, 200
+
+
+# /api/posts/search Endpoint for searching blog posts by title or content
+@app.route("/api/posts/search", methods=["GET"])
+def search_posts():
+    search_params = {}
+    for key in ("title", "content"):
+        if key in request.args:
+            value = request.args.get(key, "").strip()
+            if not value:
+                return jsonify({"error": f"'{key}' parameter cannot be empty"}), 400
+            search_params[key] = value.lower()
+
+    all_posts = read_all_posts()
+    search_results = []
+    for post in all_posts:
+        for key, value in search_params.items():
+            if value in post[key].lower():
+                search_results.append(post)
+                break  # Avoid adding the same post multiple times
+
+    return jsonify(search_results), 200
 
 
 if __name__ == "__main__":
