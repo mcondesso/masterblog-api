@@ -16,7 +16,25 @@ CORS(app)  # This will enable CORS for all routes
 # /api/posts Main Endpoint for CRUD operations on blog posts
 @app.route("/api/posts", methods=["GET"])
 def get_posts():
-    return jsonify(read_all_posts())
+    
+    sort_params = {}
+    for key in ("sort", "direction"):
+        if key in request.args:
+            value = request.args.get(key, "").strip()
+            if not value:
+                return jsonify({"error": f"'{key}' parameter cannot be empty"}), 400
+            if key == "sort" and value not in ("title", "content"):
+                return jsonify({"error": f"Invalid 'sort' parameter value: {value}"}), 400
+            if key == "direction" and value not in ("asc", "desc"):
+                return jsonify({"error": f"Invalid 'direction' parameter value: {value}"}), 400
+            sort_params[key] = value.lower()
+    all_posts = read_all_posts()
+
+    if "sort" in sort_params:
+        reverse = sort_params.get("direction", "asc") == "desc"
+        all_posts.sort(key=lambda x: x[sort_params["sort"]].lower(), reverse=reverse)
+
+    return jsonify(all_posts), 200
 
 
 @app.route("/api/posts", methods=["POST"])
