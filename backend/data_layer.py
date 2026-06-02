@@ -13,7 +13,7 @@ def read_from_db():
 def write_to_db(data):
     """Write the given data to the JSON file database."""
     global POSTS
-    POSTS.append(data)
+    POSTS = data
 
 
 def read_all_posts():
@@ -26,5 +26,6 @@ def create_post(post):
     posts = read_all_posts()
     max_id = max((p.get("id", 0) for p in posts), default=0)
     post["id"] = max_id + 1
-    write_to_db(post)
+    posts.append(post)
+    write_to_db(posts)
     return post
