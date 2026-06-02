@@ -30,8 +30,18 @@ def add_post():
     return jsonify(new_post), 201
 
 
+@app.route("/api/posts/<int:post_id>", methods=["GET"])
+def get_post_by_id(post_id):
+    post = read_post_by_id(post_id)
+
+    if not post:
+        return jsonify({"error": f"Post with id {post_id} not found"}), 404
+
+    return jsonify(post), 200
+
+
 @app.route("/api/posts/<int:post_id>", methods=["DELETE"])
-def delete(post_id):
+def delete_post_by_id(post_id):
     """Delete a blog post"""
     post = read_post_by_id(post_id)
 
