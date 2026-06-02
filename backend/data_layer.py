@@ -29,3 +29,19 @@ def create_post(post):
     posts.append(post)
     write_to_db(posts)
     return post
+
+
+def read_post_by_id(post_id):
+    """Return the blog post matching the given ID, or None if missing."""
+    posts = read_all_posts()
+    for post in posts:
+        if post["id"] == post_id:
+            return post
+    return None
+
+
+def delete_post(post_id):
+    """Remove the blog post with the given ID from the database."""
+    posts = read_all_posts()
+    posts = [post for post in posts if post["id"] != post_id]
+    write_to_db(posts)

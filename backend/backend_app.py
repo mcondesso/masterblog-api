@@ -1,7 +1,7 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, redirect, request
 from flask_cors import CORS
 
-from data_layer import read_all_posts, create_post
+from data_layer import delete_post, read_all_posts, create_post, read_post_by_id
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
@@ -28,6 +28,21 @@ def add_post():
     }
     new_post = create_post(new_post)
     return jsonify(new_post), 201
+
+
+@app.route("/api/posts/<int:post_id>", methods=["DELETE"])
+def delete(post_id):
+    """Delete a blog post"""
+    post = read_post_by_id(post_id)
+
+    if not post:
+        return jsonify({"error": f"Post with id {post_id} not found"}), 404
+
+    delete_post(post_id)
+    response = jsonify(
+        {"message": f"Post with id {post_id} has been deleted successfully."}
+    )
+    return response, 200
 
 
 if __name__ == "__main__":
